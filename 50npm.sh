@@ -31,6 +31,7 @@ if [ -d /tmp/deployment/application ]; then
   ln -s /var/node_modules /tmp/deployment/application/
 fi
 chmod +x /tmp/deployment/application/*.sh
-
+npm config set fetch-retry-maxtimeout 15000
+echo "Installing/updating NPM modules, it might take a while, go take a leak or have a healthy snack..."
 OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm install 2>&1) || error_exit "Failed to run npm install.  $OUT" $?
 echo $OUT
