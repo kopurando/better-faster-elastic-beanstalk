@@ -6,9 +6,8 @@ function error_exit
   exit $2
 }
 
-#avoid long NPM fetch hangups and turn off colors (log.io is monochrome anyway..)
+#avoid long NPM fetch hangups
 npm config set fetch-retry-maxtimeout 15000
-npm config set color false
 
 #if log.io is not installed, install it and forever.js
 echo "Installing forever and log.io"
@@ -35,7 +34,7 @@ if [ -d /tmp/deployment/application ]; then
 fi
 
 echo "Installing/updating NPM modules, it might take a while, go take a leak or have a healthy snack..."
-OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm install &>>  /var/log/cfn-init.log) || error_exit "Failed to run npm install.  $OUT" $?
+OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm install &>> /var/log/cfn-init.log) || error_exit "Failed to run npm install.  $OUT" $?
 echo $OUT
 
 #make any in-app shell scripts executable
