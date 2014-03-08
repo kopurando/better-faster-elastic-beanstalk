@@ -12,8 +12,10 @@ npm config set color false
 
 #if log.io is not installed, install it and forever.js
 echo "Installing forever and log.io"
-type -P log.io-server 2>&1 && echo "... found, skipping install" || {
+type -P forever 2>&1 && echo "... found, skipping install" || {
 npm install -g forever --user 'root' &>>  /var/log/cfn-init.log
+}
+type -P log.io-server 2>&1 && echo "... found, skipping install" || {
 npm install -g log.io --user 'root' &>>  /var/log/cfn-init.log
 }
 
