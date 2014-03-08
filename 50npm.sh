@@ -12,11 +12,11 @@ npm config set fetch-retry-maxtimeout 15000
 #if log.io is not installed, install it and forever.js
 if [ ! -f "/usr/bin/log.io-server" ]; then
 echo "Installing forever and log.io"
-npm install -g forever --user 'root'
-npm install -g log.io --user 'root'
+npm install -g forever --user 'root' &>>  /var/log/cfn-init.log
+npm install -g log.io --user 'root' &>>  /var/log/cfn-init.log
 fi
 echo "Installing other global NPM stuff (PhantomJS etc)"
-npm install -g phantomjs --user 'root'
+npm install -g phantomjs --user 'root' &>> /var/log/cfn-init.log
 #npm install -g casperjs --user 'root'
 
 #install not-installed yet app node_modules
@@ -31,10 +31,18 @@ fi
 chmod +x /tmp/deployment/application/*.sh
 
 echo "Installing/updating NPM modules, it might take a while, go take a leak or have a healthy snack..."
-OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm install 2>&1) || error_exit "Failed to run npm install.  $OUT" $?
+OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm install &>>  /var/log/cfn-init.log) || error_exit "Failed to run npm install.  $OUT" $?
 
 echo "Logger hiccup NOW!"
 #try restarting log.io, but if log.io is not running, start it via forever
 
+if [[ `pgrep -f forever` ]]; then
+  /usr/bin/forever restartall
+fi
+sleep 2 #make sure io-server is back up and running
+if [[ ! `pgrep -f log.io-server` ]]; then
+forever --minUptime 10000 start /usr/bin/log.io-server &> /var/log/io-server.log
+forever --minUptime 10000 start /usr/bin/log.io-harvester &> /var/log/io-harvester.log
+fi
 
 echo $OUT
