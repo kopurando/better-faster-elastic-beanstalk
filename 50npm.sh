@@ -42,7 +42,7 @@ echo $OUT
 chmod +x /tmp/deployment/application/*.sh
 
 #try restarting log.io, but if log.io is not running, start it via forever
-echo "Logger hiccup NOW!"
+echo "Logger hiccup NOW!" >> /var/log/cfn-init.log
 if [[ `pgrep -f forever` ]]; then
   /usr/bin/forever restartall
 fi
