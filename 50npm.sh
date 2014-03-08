@@ -6,8 +6,9 @@ function error_exit
   exit $2
 }
 
-#avoid long NPM fetch hangups
+#avoid long NPM fetch hangups and turn off colors (log.io is monochrome anyway..)
 npm config set fetch-retry-maxtimeout 15000
+npm config set color false
 
 #if log.io is not installed, install it and forever.js
 if [ ! -f "/usr/bin/log.io-server" ]; then
@@ -32,6 +33,7 @@ chmod +x /tmp/deployment/application/*.sh
 
 echo "Installing/updating NPM modules, it might take a while, go take a leak or have a healthy snack..."
 OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm install &>>  /var/log/cfn-init.log) || error_exit "Failed to run npm install.  $OUT" $?
+echo $OUT
 
 echo "Logger hiccup NOW!"
 #try restarting log.io, but if log.io is not running, start it via forever
@@ -45,4 +47,3 @@ forever --minUptime 10000 start /usr/bin/log.io-server &> /var/log/io-server.log
 forever --minUptime 10000 start /usr/bin/log.io-harvester &> /var/log/io-harvester.log
 fi
 
-echo $OUT
