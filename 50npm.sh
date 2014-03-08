@@ -11,7 +11,7 @@ npm config set fetch-retry-maxtimeout 15000
 
 #if log.io is not installed, install it and forever.js
 echo "------------------------------ — Installing forever and log.io — ------------------------------------" >> /var/log/cfn-init.log
-type -P forever 2>&1 && echo "... found, skipping install" || {
+type -P forever 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log || {
 npm install -g forever --user 'root' &>>  /var/log/cfn-init.log
 }
 type -P log.io-server 2>&1 && echo "... found, skipping install" || {
@@ -20,7 +20,7 @@ npm install -g log.io --user 'root' &>>  /var/log/cfn-init.log
 
 #install other global stuff
 echo "------------------------------ — Installing other global NPM stuff (PhantomJS etc) — ------------------------------------" >> /var/log/cfn-init.log
-type -P phantomjs 2>&1 && echo "... found, skipping install" || {
+type -P phantomjs 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log || {
 npm install -g phantomjs --user 'root' &>> /var/log/cfn-init.log
 #npm install -g casperjs --user 'root'
 }
