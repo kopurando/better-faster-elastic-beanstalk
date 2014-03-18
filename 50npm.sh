@@ -21,7 +21,7 @@ npm install -g log.io --user 'root' &>>  /var/log/cfn-init.log
 #install other global stuff
 echo "------------------------------ — Installing other global NPM stuff (PhantomJS etc) — ------------------------------------" >> /var/log/cfn-init.log
 type -P phantomjs 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log || {
-npm install -g phantomjs --user 'root' &>> /var/log/cfn-init.log
+npm install -g phantomjs@">=1.9.6 <2.0.0" --user 'root' &>> /var/log/cfn-init.log
 #npm install -g casperjs --user 'root'
 }
 
