@@ -12,13 +12,15 @@ function error_exit
 #rm -f /opt/elasticbeanstalk/node-install/npm_updated
 
 #download and extract desired node.js version
-OUT=$( [ ! -d "/opt/elasticbeanstalk/node-install" ] && mkdir /opt/elasticbeanstalk/node-install ; cd /opt/elasticbeanstalk/node-install/ && \
+echo "checking node..."
+OUT=$( [ ! -d "/opt/elasticbeanstalk/node-install" ] && echo "trying to install node.js $NODE_VER" && mkdir /opt/elasticbeanstalk/node-install ; cd /opt/elasticbeanstalk/node-install/ && \
   wget -nc http://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER-linux-$ARCH.tar.gz && \
   tar --skip-old-files -xzpf node-v$NODE_VER-linux-$ARCH.tar.gz) || error_exit "Failed to UPDATE node version. $OUT" $?.
 echo $OUT
 
 #download & make install desired nginx version
-OUT=$([ ! -d "/root/nginx-$NGINX_VER" ] && cd /root/ && curl http://nginx.org/download/nginx-$NGINX_VER.tar.gz | \
+echo "checking nginx..."
+OUT=$([ ! -d "/root/nginx-$NGINX_VER" ] && echo "trying to install nginx $NGINX_VER"  && cd /root/ && curl http://nginx.org/download/nginx-$NGINX_VER.tar.gz | \
   tar zx && cd /root/nginx-$NGINX_VER && \
   ./configure --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log \
   --http-log-path=/var/log/nginx/access.log --http-client-body-temp-path=/var/lib/nginx/tmp/client_body --http-proxy-temp-path=/var/lib/nginx/tmp/proxy \
@@ -39,6 +41,7 @@ if [ ! -L /usr/bin/npm ]; then
 ln -s /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm /usr/bin/npm
 fi
 
+echo "checking npm..."
 if [ ! -f "/opt/elasticbeanstalk/node-install/npm_updated" ]; then
 /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/ && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm update npm -g
 touch /opt/elasticbeanstalk/node-install/npm_updated
