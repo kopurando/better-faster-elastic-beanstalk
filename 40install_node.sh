@@ -20,7 +20,10 @@ echo $OUT
 
 #download & make install desired nginx version
 echo "checking nginx..." >> /var/log/cfn-init.log
-OUT=$([ ! -d "/root/nginx-$NGINX_VER" ] && echo "trying to install nginx $NGINX_VER"  >> /var/log/cfn-init.log && \
+
+#remember to add desired modules to BOTH arch-dependent commands below:
+case $( arch ) in
+( i686 ) OUT=$([ ! -d "/root/nginx-$NGINX_VER" ] && echo "trying to install nginx $NGINX_VER"  >> /var/log/cfn-init.log && \
  cd /root/ && curl http://nginx.org/download/nginx-$NGINX_VER.tar.gz |  tar zx && cd /root/nginx-$NGINX_VER &>> /var/log/cfn-init.log && \
   ./configure --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log \
   --http-log-path=/var/log/nginx/access.log --http-client-body-temp-path=/var/lib/nginx/tmp/client_body --http-proxy-temp-path=/var/lib/nginx/tmp/proxy \
@@ -29,9 +32,9 @@ OUT=$([ ! -d "/root/nginx-$NGINX_VER" ] && echo "trying to install nginx $NGINX_
    --with-http_spdy_module --with-http_realip_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_stub_status_module \
    --with-pcre --with-google_perftools_module --with-debug  --with-ld-opt=' -Wl,-E' \
    --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m32 -march=i686 -mtune=pentium4 -fasynchronous-unwind-tables' &>> /var/log/cfn-init.log \
-  && make &>> /var/log/cfn-init.log && make install &>> /var/log/cfn-init.log)
+  && make &>> /var/log/cfn-init.log && make install &>> /var/log/cfn-init.log);;
 
-OUT=$([ ! -d "/root/nginx-$NGINX_VER" ] && echo "trying to install nginx $NGINX_VER"  >> /var/log/cfn-init.log && \
+( x86_64 ) OUT=$([ ! -d "/root/nginx-$NGINX_VER" ] && echo "trying to install nginx $NGINX_VER"  >> /var/log/cfn-init.log && \
  cd /root/ && curl http://nginx.org/download/nginx-$NGINX_VER.tar.gz |  tar zx && cd /root/nginx-$NGINX_VER &>> /var/log/cfn-init.log && \
   ./configure --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log \
   --http-log-path=/var/log/nginx/access.log --http-client-body-temp-path=/var/lib/nginx/tmp/client_body --http-proxy-temp-path=/var/lib/nginx/tmp/proxy \
@@ -40,8 +43,8 @@ OUT=$([ ! -d "/root/nginx-$NGINX_VER" ] && echo "trying to install nginx $NGINX_
    --with-http_spdy_module --with-http_realip_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_stub_status_module \
    --with-pcre --with-google_perftools_module --with-debug \
    --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -m64 -mtune=generic' --with-ld-opt=' -Wl,-E' &>> /var/log/cfn-init.log \
-  && make &>> /var/log/cfn-init.log && make install &>> /var/log/cfn-init.log)
-
+  && make &>> /var/log/cfn-init.log && make install &>> /var/log/cfn-init.log);;
+esac
 
 echo $OUT
 
