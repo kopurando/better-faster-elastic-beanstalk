@@ -1,0 +1,22 @@
+/var/log/nodejs/nodejs.log {
+    daily
+    size 10M
+    missingok
+    notifempty
+    rotate 30
+    sharedscripts
+    compress
+    copytruncate
+    dateext
+}
+/var/log/phantomjs/*log {
+    daily
+    size 10M
+    missingok
+    notifempty
+    rotate 30
+    sharedscripts
+    compress
+    copytruncate
+    dateext
+}
