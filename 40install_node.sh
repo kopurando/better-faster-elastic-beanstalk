@@ -59,7 +59,7 @@ fi
 
 echo "checking npm..." >> /var/log/cfn-init.log
 if [ ! -f "/opt/elasticbeanstalk/node-install/npm_updated" ]; then
-/opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/ && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm update npm -g
+cd /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/ && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm update npm -g
 touch /opt/elasticbeanstalk/node-install/npm_updated
 echo "YAY! Updated global NPM version to `npm -v`" >> /var/log/cfn-init.log
 else
