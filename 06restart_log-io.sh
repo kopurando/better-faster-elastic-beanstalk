@@ -10,4 +10,5 @@ if [[ ! `pgrep -f log.io-server` ]]; then
 forever --minUptime 10000 start /usr/bin/log.io-server &> /var/log/io-server.log
 forever --minUptime 10000 start /usr/bin/log.io-harvester &> /var/log/io-harvester.log
 fi
+sleep 3 #make sure io-server is back up and running
 echo "DONE." >> /var/log/cfn-init.log
