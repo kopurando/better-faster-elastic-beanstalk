@@ -37,17 +37,3 @@ echo "------------------------------ — Installing/updating NPM modules, it mig
 OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm install --production &>> /var/log/cfn-init.log) || error_exit "Failed to run npm install.  $OUT" $?
 echo $OUT
 
-#make any in-app shell scripts executable
-chmod +x /tmp/deployment/application/*.sh
-
-#try restarting log.io, but if log.io is not running, start it via forever
-echo "------------------------------ — Logger hiccup NOW! — ---------------------------------------" >> /var/log/cfn-init.log
-if [[ `pgrep -f forever` ]]; then
-  /usr/bin/forever restartall
-fi
-sleep 2 #make sure io-server is back up and running
-if [[ ! `pgrep -f log.io-server` ]]; then
-forever --minUptime 10000 start /usr/bin/log.io-server &> /var/log/io-server.log
-forever --minUptime 10000 start /usr/bin/log.io-harvester &> /var/log/io-harvester.log
-fi
-
