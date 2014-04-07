@@ -33,7 +33,7 @@ if [ -d /tmp/deployment/application ]; then
   ln -s /var/node_modules /tmp/deployment/application/
 fi
 
-if [ ! -f "/etc/init/nodejs.conf" ]; then
+if [ -f "/etc/init/nodejs.conf" ]; then
 IO_LOG_NODE=`grep IO_LOG_NODE /etc/init/nodejs.conf | cut --delimiter='"' --fields=2` && sed -i.bak -e s/IO_LOG_NODE/$IO_LOG_NODE/ /root/.log.io/harvester.conf
 fi
 
