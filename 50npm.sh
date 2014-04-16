@@ -9,19 +9,11 @@ function error_exit
 #avoid long NPM fetch hangups
 npm config set fetch-retry-maxtimeout 15000
 
-#if log.io is not installed, install it and forever.js
+#if log.io is not installed, install it and forever.js and require.js
 echo "------------------------------ — Installing forever, requirejs and log.io — ------------------------------------" >> /var/log/cfn-init.log
-type -P forever 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log || {
-npm install -g --production forever --user 'root' &>>  /var/log/cfn-init.log
-}
-type -P log.io-server 2>&1 && echo "... found, skipping install" || {
-npm install -g --production log.io --user 'root' &>>  /var/log/cfn-init.log
-}
-type -P r.js 2>&1 && echo "... found, skipping install" || {
-npm install -g --production requirejs --user 'root' &>>  /var/log/cfn-init.log
-}
-
-
+type -P forever 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log || npm install -g --production forever --user 'root' &>>  /var/log/cfn-init.log
+type -P log.io-server 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log  || npm install -g --production log.io --user 'root' &>>  /var/log/cfn-init.log
+type -P r.js 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log  || npm install -g --production requirejs@">=2.1.11 <3.0.0" --user 'root' &>>  /var/log/cfn-init.log
 
 #install other global stuff
 echo "------------------------------ — Installing other global NPM stuff (PhantomJS etc) — ------------------------------------" >> /var/log/cfn-init.log
