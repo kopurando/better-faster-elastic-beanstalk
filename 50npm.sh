@@ -8,18 +8,19 @@ function error_exit
 
 #avoid long NPM fetch hangups
 npm config set fetch-retry-maxtimeout 15000
-
+#redirect all output to cfn-init to capture it by log.io
+exec  2>&1
 #if log.io is not installed, install it and forever.js and require.js
-echo "------------------------------ — Installing forever, requirejs and log.io — ------------------------------------" >> /var/log/cfn-init.log
-type -P forever 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log || npm install -g --production forever --user 'root' &>>  /var/log/cfn-init.log
-type -P log.io-server 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log  || npm install -g --production log.io --user 'root' &>>  /var/log/cfn-init.log
-type -P r.js 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log  || npm install -g --production requirejs@">=2.1.11 <3.0.0" --user 'root' &>>  /var/log/cfn-init.log
-type -P jade 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log  || npm install -g --production jade@">=1.3.1 <2.0.0" --user 'root' &>>  /var/log/cfn-init.log
+echo "------------------------------ — Installing forever, requirejs and log.io — ------------------------------------"
+type -P forever  && echo "... found, skipping install"  || npm install -g --production forever --user 'root' &
+type -P log.io-server  && echo "... found, skipping install"   || npm install -g --production log.io --user 'root' &
+type -P r.js  && echo "... found, skipping install"   || npm install -g --production requirejs@">=2.1.11 <3.0.0" --user 'root' &
+type -P jade  && echo "... found, skipping install"   || npm install -g --production jade@">=1.3.1 <2.0.0" --user 'root' &
 
 #install other global stuff
-echo "------------------------------ — Installing other global NPM stuff (PhantomJS etc) — ------------------------------------" >> /var/log/cfn-init.log
-type -P phantomjs 2>&1 && echo "... found, skipping install" >> /var/log/cfn-init.log || {
-npm install -g --production phantomjs@">=1.9.6 <2.0.0" --user 'root' &>> /var/log/cfn-init.log
+echo "------------------------------ — Installing other global NPM stuff (PhantomJS etc) — ------------------------------------"
+type -P phantomjs  && echo "... found, skipping install"  || {
+npm install -g --production phantomjs@">=1.9.6 <2.0.0" --user 'root' &
 #npm install -g --production casperjs --user 'root'
 }
 
@@ -35,12 +36,12 @@ if [ -f "/etc/init/nodejs.conf" ]; then
 IO_LOG_NODE=`grep IO_LOG_NODE /etc/init/nodejs.conf | cut --delimiter='"' --fields=2` && sed -i.bak -e s/IO_LOG_NODE/$IO_LOG_NODE/ /root/.log.io/harvester.conf
 fi
 
-echo "------------------------------ — Installing/updating NPM modules, it might take a while, go take a leak or have a healthy snack... — -----------------------------------" >> /var/log/cfn-init.log
-OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm install --production &>> /var/log/cfn-init.log) || error_exit "Failed to run npm install.  $OUT" $?
+echo "------------------------------ — Installing/updating NPM modules, it might take a while, go take a leak or have a healthy snack... — -----------------------------------"
+OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm install --production &) || error_exit "Failed to run npm install.  $OUT" $?
 echo $OUT
 
 #try restarting log.io, but if log.io is not running, start it via forever
-echo "------------------------------ — Logger hiccup NOW! — ---------------------------------------" >> /var/log/cfn-init.log
+echo "------------------------------ — Logger hiccup NOW! — ---------------------------------------"
 if [[ `pgrep -f forever` ]]; then
   /usr/bin/forever restartall
 fi
