@@ -42,13 +42,15 @@ OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && 
 echo $OUT
 
 #try restarting log.io, but if log.io is not running, start it via forever
+# /sbin/stop io-server
+# /sbin/stop io-harvester
+# sleep 1 #make sure io-server is down
+if [[ ! `pgrep -f log.io-server` ]]; then
 echo "------------------------------ — Logger hiccup NOW! — ---------------------------------------"
-/sbin/stop io-server
-/sbin/stop io-harvester
-sleep 1 #make sure io-server is down
 /sbin/start io-server
 /sbin/start io-harvester
 echo "done"
+fi
 # if [[ `pgrep -f forever` ]]; then
 #   /usr/bin/forever restartall
 # fi
