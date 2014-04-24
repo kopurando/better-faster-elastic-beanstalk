@@ -15,9 +15,6 @@ exec >>/var/log/cfn-init.log  2>&1
 #rm -f /opt/elasticbeanstalk/node-install/npm_updated
 
 #download and extract desired node.js version
-cd /tmp/deployment/application && /usr/bin/jade /tmp/deployment/application/views/underscore/*.jade --out /tmp/deployment/application/public/templates
-cd /tmp/deployment/application/public && /usr/bin/r.js -o build.js >> /var/log/cfn-init.log && mv -v /tmp/deployment/application/public/dist /tmp/deployment/application/dist && rm -rf /tmp/deployment/application/public/ && mv -v /tmp/deployment/application/dist /tmp/deployment/application/public
-
 echo "checking node..."
 OUT=$( [ ! -d "/opt/elasticbeanstalk/node-install" ] && echo "trying to install node.js $NODE_VER"   && mkdir /opt/elasticbeanstalk/node-install ; cd /opt/elasticbeanstalk/node-install/ && \
   wget -nc http://nodejs.org/dist/v$NODE_VER/node-v$NODE_VER-linux-$ARCH.tar.gz && \
