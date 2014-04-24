@@ -43,10 +43,15 @@ echo $OUT
 
 #try restarting log.io, but if log.io is not running, start it via forever
 echo "------------------------------ — Logger hiccup NOW! — ---------------------------------------"
+/sbin/stop io-server
+/sbin/stop io-harvester
+sleep 1 #make sure io-server is down
+/sbin/start io-server
+/sbin/start io-harvester
+
 # if [[ `pgrep -f forever` ]]; then
 #   /usr/bin/forever restartall
 # fi
-sleep 2 #make sure io-server is back up and running
 # if [[ ! `pgrep -f log.io-server` ]]; then
 # forever --minUptime 10000 start /usr/bin/log.io-server &> /var/log/io-server.log
 # forever --minUptime 10000 start /usr/bin/log.io-harvester &> /var/log/io-harvester.log
