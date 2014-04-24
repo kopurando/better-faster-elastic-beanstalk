@@ -11,8 +11,9 @@ exec >>/var/log/cfn-init.log  2>&1
 #avoid long NPM fetch hangups
 npm config set fetch-retry-maxtimeout 15000
 #if log.io is not installed, install it and forever.js
-echo "------------------------------ — Installing forever and log.io — ------------------------------------"
-type -P forever  && echo "... found, skipping install"  || npm install -g --production forever --user 'root'
+echo "------------------------------ — Installing log.io — ------------------------------------"
+# do not install forever, as we moved services to /etc/init to decrease RAM footprint
+# type -P forever  && echo "... found, skipping install"  || npm install -g --production forever --user 'root'
 type -P log.io-server  && echo "... found, skipping install"   || npm install -g --production log.io --user 'root'
 
 #install other global stuff
@@ -42,12 +43,12 @@ echo $OUT
 
 #try restarting log.io, but if log.io is not running, start it via forever
 echo "------------------------------ — Logger hiccup NOW! — ---------------------------------------"
-if [[ `pgrep -f forever` ]]; then
-  /usr/bin/forever restartall
-fi
+# if [[ `pgrep -f forever` ]]; then
+#   /usr/bin/forever restartall
+# fi
 sleep 2 #make sure io-server is back up and running
-if [[ ! `pgrep -f log.io-server` ]]; then
-forever --minUptime 10000 start /usr/bin/log.io-server &> /var/log/io-server.log
-forever --minUptime 10000 start /usr/bin/log.io-harvester &> /var/log/io-harvester.log
-fi
+# if [[ ! `pgrep -f log.io-server` ]]; then
+# forever --minUptime 10000 start /usr/bin/log.io-server &> /var/log/io-server.log
+# forever --minUptime 10000 start /usr/bin/log.io-harvester &> /var/log/io-harvester.log
+# fi
 
