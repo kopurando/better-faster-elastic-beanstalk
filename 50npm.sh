@@ -48,7 +48,7 @@ echo "------------------------------ — Logger hiccup NOW! — ----------------
 sleep 1 #make sure io-server is down
 /sbin/start io-server
 /sbin/start io-harvester
-
+echo "done"
 # if [[ `pgrep -f forever` ]]; then
 #   /usr/bin/forever restartall
 # fi
