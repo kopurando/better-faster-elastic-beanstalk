@@ -74,7 +74,7 @@ cd /tmp/deployment/application && /usr/bin/jade /tmp/deployment/application/view
 echo "r.js....."
 cd /tmp/deployment/application/public && /usr/bin/r.js -o build.js >> /var/log/cfn-init.log && mv -v /tmp/deployment/application/public/dist /tmp/deployment/application/dist && rm -rf /tmp/deployment/application/public/ && mv -v /tmp/deployment/application/dist /tmp/deployment/application/public
 echo "md5...."
-cd /tmp/deployment/application/public/ && find . -maxdepth 2 -iname '*js' -o -iname '*css' -type f | xargs  md5sum | awk '{system("echo "$1" > "$2".md5")}'
+cd /tmp/deployment/application/public/ && find . -maxdepth 2 -type f  -iname '*js' -o -iname '*css' -type f | xargs  md5sum | awk '{system("echo "$1" > "$2".md5")}'
 echo "gzip everything!"
-cd /tmp/deployment/application/public/ && find . -type f -iname "*css" -o -iname "*js" | while read -r x;do   gzip -9 -c "$x" > "$x.gz";done
+cd /tmp/deployment/application/public/ && find . -type f -iname "*css" -o -iname "*js" -type f  | while read -r x;do   gzip -9 -c "$x" > "$x.gz";done
 
