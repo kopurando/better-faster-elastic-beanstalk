@@ -69,6 +69,7 @@ else
   echo "Skipping NPM -g version update. To update, please uncomment 40install_node.sh:12"
 fi
 
+if [ ! -f "/tmp/deployment/application/public/build.js" ]; then
 echo "compiling underscore templates..."
 cd /tmp/deployment/application && /usr/bin/jade /tmp/deployment/application/views/underscore/*.jade --out /tmp/deployment/application/public/templates >> /var/log/cfn-init.log
 echo "running r.js build....."
@@ -80,3 +81,4 @@ echo "gzipping everything!"
 cd /tmp/deployment/application/public/ && find . -type f -iname "*css" -o -iname "*js" -type f  | while read -r x;do   gzip -9 -c "$x" > "$x.gz";done
 echo "touching all files to make them dated with the same time (as per nginx gzip_static recommendation)"
 cd /tmp/deployment/application/public/ && find . -type f -exec touch {} \;
+fi
