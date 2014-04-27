@@ -69,7 +69,7 @@ else
   echo "Skipping NPM -g version update. To update, please uncomment 40install_node.sh:12"
 fi
 
-if [ ! -f "/tmp/deployment/application/public/build.js" ]; then
+if [ -f "/tmp/deployment/application/public/build.js" ]; then
 echo "compiling underscore templates..."
 cd /tmp/deployment/application && /usr/bin/jade /tmp/deployment/application/views/underscore/*.jade --out /tmp/deployment/application/public/templates >> /var/log/cfn-init.log
 echo "running r.js build....."
