@@ -7,7 +7,7 @@ function error_exit
   exit $2
 }
 
-#in order to test config should be moved at this stage as ebnode.py overwrites config after YML has been processed and that can lead to nginx start failure
+#in order to test, config should be moved at this step as ebnode.py overwrites config after YML has been processed, and that can lead to nginx start failure
 mv -vf /tmp/deployment/config/#etc#nginx#conf.d#00_elastic_beanstalk_proxy.conf /etc/nginx/conf.d/00_elastic_beanstalk_proxy.conf
 mkdir /etc/nginx/conf.d/bak
 cp -v /etc/nginx/conf.d/*.snippet /etc/nginx/conf.d/bak/
