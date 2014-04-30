@@ -8,12 +8,22 @@ function error_exit
 
 #redirect all output to cfn-init to capture it by log.io
 exec >>/var/log/cfn-init.log  2>&1
+echo "------------------------------ — Logger hiccup NOW! — ---------------------------------------"
+/sbin/stop io-server
+/sbin/stop io-harvester
+
 #avoid long NPM fetch hangups
 npm config set fetch-retry-maxtimeout 15000
 #if log.io is not installed, install it and forever.js
 # do not install forever, as we moved services to /etc/init to decrease RAM footprint
 # type -P forever  && echo "... found, skipping install"  || npm install -g --production forever --user 'root'
 type -P log.io-server  && echo "... found, skipping install"   || npm install -g --production log.io --user 'root'
+
+if [[ ! `pgrep -f log.io-server` ]]; then
+/sbin/start io-server
+/sbin/start io-harvester
+echo "done"
+fi
 
 #install other global stuff
 type -P phantomjs  && echo "... found, skipping install"  || {
@@ -38,22 +48,4 @@ fi
 echo "------------------------------ — Installing/updating NPM modules, it might take a while, go take a leak or have a healthy snack... — -----------------------------------"
 OUT=$([ -d "/tmp/deployment/application" ] && cd /tmp/deployment/application && /opt/elasticbeanstalk/node-install/node-v$NODE_VER-linux-$ARCH/bin/npm install --production) || error_exit "Failed to run npm install.  $OUT" $?
 echo $OUT
-
-#try restarting log.io, but if log.io is not running, start it via forever
-# /sbin/stop io-server
-# /sbin/stop io-harvester
-# sleep 1 #make sure io-server is down
-if [[ ! `pgrep -f log.io-server` ]]; then
-echo "------------------------------ — Logger hiccup NOW! — ---------------------------------------"
-/sbin/start io-server
-/sbin/start io-harvester
-echo "done"
-fi
-# if [[ `pgrep -f forever` ]]; then
-#   /usr/bin/forever restartall
-# fi
-# if [[ ! `pgrep -f log.io-server` ]]; then
-# forever --minUptime 10000 start /usr/bin/log.io-server &> /var/log/io-server.log
-# forever --minUptime 10000 start /usr/bin/log.io-harvester &> /var/log/io-harvester.log
-# fi
 
