@@ -20,7 +20,7 @@ echo "checking nginx..."
 #remember to add desired modules to BOTH arch-dependent commands below:
 case $( arch ) in
 ( i686 ) OUT=$([ ! -d "/root/nginx-$NGINX_VER" ] && echo "trying to install nginx $NGINX_VER" &>> /var/log/cfn-init.log  && \
- cd /root/ && curl http://nginx.org/download/nginx-$NGINX_VER.tar.gz |  tar zx && cd /root/nginx-$NGINX_VER  && \
+ cd /root/ && curl --retry 10  http://nginx.org/download/nginx-$NGINX_VER.tar.gz |  tar zx && cd /root/nginx-$NGINX_VER  && \
   ./configure --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log \
   --http-log-path=/var/log/nginx/access.log --http-client-body-temp-path=/var/lib/nginx/tmp/client_body --http-proxy-temp-path=/var/lib/nginx/tmp/proxy \
    --http-fastcgi-temp-path=/var/lib/nginx/tmp/fastcgi --http-uwsgi-temp-path=/var/lib/nginx/tmp/uwsgi --http-scgi-temp-path=/var/lib/nginx/tmp/scgi \
@@ -31,7 +31,7 @@ case $( arch ) in
   && make &>> /var/log/cfn-init.log && make install &>> /var/log/cfn-init.log);;
 
 ( x86_64 ) OUT=$([ ! -d "/root/nginx-$NGINX_VER" ] && echo "trying to install nginx $NGINX_VER"   && \
- cd /root/ && curl http://nginx.org/download/nginx-$NGINX_VER.tar.gz |  tar zx && cd /root/nginx-$NGINX_VER &>> /var/log/cfn-init.log && \
+ cd /root/ && curl --retry 10  http://nginx.org/download/nginx-$NGINX_VER.tar.gz |  tar zx && cd /root/nginx-$NGINX_VER &>> /var/log/cfn-init.log && \
   ./configure --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log \
   --http-log-path=/var/log/nginx/access.log --http-client-body-temp-path=/var/lib/nginx/tmp/client_body --http-proxy-temp-path=/var/lib/nginx/tmp/proxy \
    --http-fastcgi-temp-path=/var/lib/nginx/tmp/fastcgi --http-uwsgi-temp-path=/var/lib/nginx/tmp/uwsgi --http-scgi-temp-path=/var/lib/nginx/tmp/scgi \
