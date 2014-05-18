@@ -8,7 +8,7 @@ function error_exit
 
 #redirect all output to cfn-init to capture it by log.io
 exec >>/var/log/cfn-init.log  2>&1
-echo "------------------------------ — Logger hiccup NOW! — ---------------------------------------"
+echo ">>>> Running r.js......"
 
 if [ -f "/tmp/deployment/application/public/build.js" ]; then
 echo "compiling underscore templates..."
