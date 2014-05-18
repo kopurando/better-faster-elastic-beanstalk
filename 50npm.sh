@@ -19,6 +19,10 @@ npm config set fetch-retry-maxtimeout 15000
 # type -P forever  && echo "... found, skipping install"  || npm install -g --production forever --user 'root'
 type -P log.io-server  && echo "... found, skipping install"   || npm install -g --production log.io --user 'root'
 
+if [ -f "/etc/init/nodejs.conf" ]; then
+IO_LOG_NODE=`grep IO_LOG_NODE /etc/init/nodejs.conf | cut --delimiter='"' --fields=2` && sed -i.bak -e s/IO_LOG_NODE/$IO_LOG_NODE/ /root/.log.io/harvester.conf
+fi
+
 if [[ ! `pgrep -f log.io-server` ]]; then
 /sbin/start io-server
 /sbin/start io-harvester
@@ -39,10 +43,6 @@ if [ ! -d "/var/node_modules" ]; then
 fi
 if [ -d /tmp/deployment/application ]; then
   ln -s /var/node_modules /tmp/deployment/application/
-fi
-
-if [ -f "/etc/init/nodejs.conf" ]; then
-IO_LOG_NODE=`grep IO_LOG_NODE /etc/init/nodejs.conf | cut --delimiter='"' --fields=2` && sed -i.bak -e s/IO_LOG_NODE/$IO_LOG_NODE/ /root/.log.io/harvester.conf
 fi
 
 echo "------------------------------ — Installing/updating NPM modules, it might take a while, go take a leak or have a healthy snack... — -----------------------------------"
