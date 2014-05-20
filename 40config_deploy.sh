@@ -28,5 +28,4 @@ for i in $(ls $SOURCE); do
   FILE_NAME=$(echo $i | sed -e 's/#/\//g')
   /bin/cp "$SOURCE/$i" "$FILE_NAME" || error_exit "Failed to copy $FILE_NAME into place."
 done
-#if instance is not suited for phantom, remove phantom nginx snippets
-if [[ $IO_LOG_NODE != *PHANTO* ]] ; then  rm -fv /etc/nginx/conf.d/phantomjs* ; fi ;
+
