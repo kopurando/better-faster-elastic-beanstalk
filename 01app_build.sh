@@ -13,7 +13,6 @@ echo ">>>> Running r.js......"
 if [ -f "/tmp/deployment/application/public/build.js" ]; then
 echo "compiling underscore templates..."
 cd /tmp/deployment/application && /usr/bin/jade /tmp/deployment/application/views/underscore/*.jade --out /tmp/deployment/application/public/templates >> /var/log/cfn-init.log
-echo "running r.js build....."
 OUT=$(cd /tmp/deployment/application/public && /usr/bin/r.js -o build.js >> /var/log/cfn-init.log && mv -v /tmp/deployment/application/public/dist /tmp/deployment/application/dist && rm -rf /tmp/deployment/application/public/ && mv -v /tmp/deployment/application/dist /tmp/deployment/application/public ) || error_exit "Failed to run r.js optimizer. $OUT" $?
 echo $OUT
 echo "computing md5 hashes...."

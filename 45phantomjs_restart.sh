@@ -1,5 +1,6 @@
 #!/bin/bash
 #if instance is not suited for phantom, dont run it
+exec >>/var/log/cfn-init.log  2>&1
 
 if [ -f "/etc/init/nodejs.conf" ]; then
 IO_LOG_NODE=`grep IO_LOG_NODE /etc/init/nodejs.conf | cut --delimiter='"' --fields=2`
