@@ -25,6 +25,7 @@ fi
 
 if [[ ! `pgrep -f log.io-server` ]]; then
 /sbin/start io-server
+sleep 2
 /sbin/start io-harvester
 echo "done"
 fi
