@@ -13,7 +13,7 @@ echo ">>>> Running r.js......"
 if ls /tmp/deployment/application/public/build*js &> /dev/null; then
 echo "compiling underscore templates..."
 cd /tmp/deployment/application && cp -r views/underscore public/templates && jade public/templates/ && find public/templates/ -name "*jade" -delete >> /var/log/cfn-init.log
-OUT=$(cd /tmp/deployment/application/public && r.js -o build_desktop.js && r.js -o build_mobile.js >> /var/log/cfn-init.log && rm -rf /tmp/deployment/application/public/ && mv -v /tmp/deployment/application/dist /tmp/deployment/application/public ) || error_exit "Failed to run r.js optimizer. $OUT" $?
+OUT=$(cd /tmp/deployment/application/public && r.js -o build_desktop.js  >> /var/log/cfn-init.log && r.js -o build_mobile.js >> /var/log/cfn-init.log && rm -rf /tmp/deployment/application/public/ && mv -v /tmp/deployment/application/dist /tmp/deployment/application/public ) || error_exit "Failed to run r.js optimizer. $OUT" $?
 echo $OUT
 echo "computing md5 hashes...."
 cd /tmp/deployment/application/public/ && find . -maxdepth 3 -type f  -iname '*js' -o -iname '*css' -type f | xargs  md5sum | awk '{system("echo "$1" > "$2".md5")}'
