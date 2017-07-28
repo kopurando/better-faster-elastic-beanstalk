@@ -1,6 +1,16 @@
 better-faster-elastic-beanstalk
 ===============================
 
+# 2017 UPDATE
+This project has not been updated for 3 years now (as we switched to docker), but as the problem still exists (AWS, wtf?), please refer to one of recent forks, or this project:
+https://github.com/mixmaxhq/eb-fix-npm/
+(not a fork, but rather inspired by BFEB)
+
+Peace.
+------
+
+# Intro
+
 This collection of hooks for AWS Elastic Beanstalk node.js containers that was designed to dramatically reduce deployment times, avoid unnecessary rebuilding of node_modules, install any version of node.js, install global NPM modules and more.
 
 This project demonstrates several tweaks to the standard node.js Elastic Beanstalk configuration to significantly reduce deployment times by avoiding unnecessary rebuilds of node_modules. 
